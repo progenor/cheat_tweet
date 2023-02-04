@@ -8,7 +8,7 @@ import sty from "@/styles/SidebarMenu.module.scss";
 
 const Sidebar = () => {
   return (
-    <div className="fixed flex-col hidden h-full p-4 mx-auto sm:flex xl:items-start">
+    <div className="fixed flex-col hidden h-full p-4 mx-auto sm:flex xl:items-start xl:ml-24">
       {/* logo */}
       <div className={sty.logo_cont}>
         <Image

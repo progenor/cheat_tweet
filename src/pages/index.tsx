@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Inter } from "@next/font/google";
 import Sidebar from "@/components/Sidebar";
 
-import sty from "@/styles/Home.module.scss";
 import Feed from "@/components/Feed";
 import RightSidebar from "@/components/RightSidebar";
 
@@ -17,7 +16,7 @@ export default function Home() {
           <title>Cheat Tweet</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <main className={sty.main}>
+        <main className="flex min-h-screen mx-auto">
           <Sidebar />
           <Feed />
           <RightSidebar />

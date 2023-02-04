@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 
 import sty from "@/styles/Home.module.scss";
 import Feed from "@/components/Feed";
+import RightSidebar from "@/components/RightSidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function Home() {
         <main className={sty.main}>
           <Sidebar />
           <Feed />
+          <RightSidebar />
         </main>
       </div>
     </>

@@ -103,7 +103,9 @@ const FeedInput = () => {
               {!loading && (
                 <>
                   <div className="flex gap-2">
-                    <BsFillEmojiSunglassesFill className="p-1 text-red-500 cursor-pointer w-7 h-7 hover:text-red-700 hover:bg-red-100 rounded-3xl" />
+                    <div>
+                      <BsFillEmojiSunglassesFill className="p-1 text-red-500 cursor-pointer w-7 h-7 hover:text-red-700 hover:bg-red-100 rounded-3xl" />
+                    </div>
                     <div
                       className=""
                       onClick={() => filePickerRef.current.click()}

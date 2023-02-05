@@ -42,7 +42,7 @@ const Sidebar = () => {
       {session ? (
         <div className={sty.profile_cont}>
           <img
-            src={String(session?.user?.image || logo)}
+            src={session?.user?.image || logo}
             alt="logo"
             className={sty.image}
           />
@@ -50,7 +50,7 @@ const Sidebar = () => {
             <h3 className="font-bold text-black text-md">
               {session?.user?.name}
             </h3>
-            <p>@{String(session.user?.username)}</p>
+            <p>@{session.user?.username}</p>
           </div>
           <BsThreeDots
             className="hidden w-5 h-5 ml-2 xl:inline"

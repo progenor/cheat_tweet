@@ -15,7 +15,7 @@ const FeedInput = () => {
       {session && (
         <div className="flex p-3 space-x-3 border-b border-gray-200">
           <img
-            src={session?.user?.image || logo}
+            src={String(session?.user?.image || logo)}
             alt="profile picture"
             className="w-[55px] h-[55px] rounded-full cursor-pointer hover:brightness-95"
           />

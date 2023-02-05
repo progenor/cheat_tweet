@@ -7,9 +7,27 @@ import { AiOutlineFileImage } from "react-icons/ai";
 import { BsFillEmojiSunglassesFill } from "react-icons/bs";
 
 import { useSession } from "next-auth/react";
+import { useState } from "react";
+
+import { db } from "../../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const FeedInput = () => {
   const { data: session } = useSession();
+
+  const [input, setInput] = useState("");
+
+  const sendPost = async () => {
+    const docRef = await addDoc(collection(db, "posts"), {
+      id: session?.user?.uid,
+      name: session?.user?.name,
+      username: session?.user?.username,
+      text: input,
+      userImg: session?.user?.image,
+      timestamp: serverTimestamp(),
+    });
+    setInput("");
+  };
   return (
     <>
       {session && (
@@ -25,6 +43,8 @@ const FeedInput = () => {
                 rows={3}
                 placeholder="What's happening?"
                 className="w-full text-lg placeholder-gray-700 border-none focus:ring-0 tracking-wide min-h-[50px] text-gray-800"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
               />
             </div>
             <div className="flex justify-between border-t-[3px] pt-3 items-center">
@@ -34,7 +54,8 @@ const FeedInput = () => {
               </div>
               <button
                 className="p-2 px-4 bg-red-500 rounded-3xl hover:brightness-95 disabled:opacity-50"
-                disabled
+                disabled={!input.trim()}
+                onClick={() => sendPost()}
               >
                 Tweet
               </button>

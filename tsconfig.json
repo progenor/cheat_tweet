@@ -23,8 +23,11 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.jsx",
     "src/pages/api/auth/[...nextauth].js",
-    "src/components/Sidebar.jsx"
+    "src/components/Sidebar.jsx",
+    "src/components/FeedInput.jsx",
+    "src/components/Feed.jsx"
   ],
   "exclude": ["node_modules"]
 }

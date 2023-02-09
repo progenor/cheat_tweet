@@ -57,7 +57,9 @@ const Post = ({ post }) => {
       // delete post from firestore
       await deleteDoc(doc(db, "posts", post.id));
       //delete post image from storage
-      await deleteObject(ref(storage, `posts/${post.id}/image`));
+      if (post.data().image) {
+        await deleteObject(ref(storage, `posts/${post.id}/image`));
+      }
     }
   };
 

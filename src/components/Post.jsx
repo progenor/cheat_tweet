@@ -1,5 +1,6 @@
 import { BsBookmarksFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
+import Moment from "react-moment";
 
 const Post = ({ post }) => {
   return (
@@ -16,11 +17,13 @@ const Post = ({ post }) => {
               {post.data().name}
             </h3>
             <h2 className="mr-2">@{post.data().username}</h2>
-            <h2 className="hidden md:inline">timestamp</h2>
+            <h2 className="hidden md:inline">
+              <Moment fromNow>{post.data().timestamp.toDate()}</Moment>
+            </h2>
           </div>
           <BsThreeDots className="mr-2 text-2xl cursor-pointer" />
         </div>
-        <p className="mb-2">{post.data().text}</p>
+        <p className="pl-2 mb-2">{post.data().text}</p>
         <img src={post.data().image} alt="post image" />
 
         {/* buttons */}

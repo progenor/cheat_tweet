@@ -14,6 +14,8 @@ import { db, storage } from "../../firebase";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { deleteObject, ref } from "firebase/storage";
+import { modalState, postIDState } from "atom/modalAtom";
+import { useRecoilState } from "recoil";
 
 const Post = ({ post }) => {
   const { data: session } = useSession();
@@ -63,6 +65,9 @@ const Post = ({ post }) => {
     }
   };
 
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIDState);
+
   return (
     <div className="flex border border-gray-200">
       <img
@@ -88,7 +93,17 @@ const Post = ({ post }) => {
 
         {/* buttons */}
         <div className="flex justify-between px-4 my-5">
-          <AiOutlineComment className="mr-2 text-2xl cursor-pointer" />
+          <AiOutlineComment
+            onClick={() => {
+              if (!session) {
+                signIn();
+              } else {
+                setPostId(post.id);
+                setOpen(!open);
+              }
+            }}
+            className="mr-2 text-2xl cursor-pointer"
+          />
           <div className="flex items-center">
             {!hasLikes ? (
               <AiOutlineHeart

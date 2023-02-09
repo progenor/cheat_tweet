@@ -1,8 +1,56 @@
 import { BsBookmarksFill, BsThreeDots, BsTrash } from "react-icons/bs";
-import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineComment, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+
 import Moment from "react-moment";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../../firebase";
+
+import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const Post = ({ post }) => {
+  const { data: session } = useSession();
+
+  const [likes, setLikes] = useState([]);
+  const [hasLikes, setHasLikes] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", post.id, "likes"),
+      (snapshot) => {
+        setLikes(snapshot.docs);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [db]);
+
+  useEffect(() => {
+    setHasLikes(
+      likes.findIndex((like) => like.id === session?.user.uid) !== -1
+    );
+  }, [likes]);
+
+  const likePost = async () => {
+    if (session) {
+      if (hasLikes) {
+        await deleteDoc(doc(db, "posts", post.id, "likes", session?.user.uid));
+      } else {
+        await setDoc(doc(db, "posts", post.id, "likes", session?.user.uid), {
+          username: session.user.username,
+        });
+      }
+    } else {
+      signIn();
+    }
+  };
+
   return (
     <div className="flex border border-gray-200">
       <img
@@ -29,7 +77,23 @@ const Post = ({ post }) => {
         {/* buttons */}
         <div className="flex justify-between px-4 my-5">
           <AiOutlineComment className="mr-2 text-2xl cursor-pointer" />
-          <AiOutlineHeart className="mr-2 text-2xl cursor-pointer" />
+          <div className="flex items-center">
+            {!hasLikes ? (
+              <AiOutlineHeart
+                onClick={() => likePost()}
+                className="mr-2 text-2xl cursor-pointer"
+              />
+            ) : (
+              <AiFillHeart
+                onClick={() => likePost()}
+                className="mr-2 text-2xl text-red-500 cursor-pointer"
+              />
+            )}
+            {likes.length > 0 && (
+              <span className="text-sm">{likes.length}</span>
+            )}
+          </div>
+
           <BsBookmarksFill className="mr-2 text-2xl cursor-pointer" />
           <BsTrash className="mr-2 text-2xl cursor-pointer" />
         </div>

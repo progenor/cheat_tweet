@@ -101,7 +101,7 @@ const CommentModal = () => {
                       </Moment>
                     </h2>
                   </div>
-                  <p>{post?.data()?.text}</p>
+                  <p className="text-gray-500">{post?.data()?.text}</p>
                 </div>
               </div>
 

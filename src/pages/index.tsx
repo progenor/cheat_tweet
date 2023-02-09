@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 
 import Feed from "@/components/Feed";
 import RightSidebar from "@/components/RightSidebar";
+import CommentModal from "@/components/CommentModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function Home() {
           <Sidebar />
           <Feed />
           <RightSidebar />
+          <CommentModal />
         </main>
       </div>
     </>

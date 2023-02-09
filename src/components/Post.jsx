@@ -9,10 +9,11 @@ import {
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
 
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { deleteObject, ref } from "firebase/storage";
 
 const Post = ({ post }) => {
   const { data: session } = useSession();
@@ -51,6 +52,15 @@ const Post = ({ post }) => {
     }
   };
 
+  const deletePost = async () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      // delete post from firestore
+      await deleteDoc(doc(db, "posts", post.id));
+      //delete post image from storage
+      await deleteObject(ref(storage, `posts/${post.id}/image`));
+    }
+  };
+
   return (
     <div className="flex border border-gray-200">
       <img
@@ -66,7 +76,7 @@ const Post = ({ post }) => {
             </h3>
             <h2 className="mr-2">@{post.data().username}</h2>
             <h2 className="hidden md:inline">
-              <Moment fromNow>{post.data().timestamp.toDate()}</Moment>
+              <Moment fromNow>{post.data().timestamp?.toDate()}</Moment>
             </h2>
           </div>
           <BsThreeDots className="mr-2 text-2xl cursor-pointer" />
@@ -95,7 +105,12 @@ const Post = ({ post }) => {
           </div>
 
           <BsBookmarksFill className="mr-2 text-2xl cursor-pointer" />
-          <BsTrash className="mr-2 text-2xl cursor-pointer" />
+          {session?.user.uid === post.data().id && (
+            <BsTrash
+              onClick={() => deletePost()}
+              className="mr-2 text-2xl cursor-pointer"
+            />
+          )}
         </div>
       </div>
     </div>

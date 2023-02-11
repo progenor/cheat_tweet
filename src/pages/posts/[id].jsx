@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import CommentModal from "@/components/CommentModal";
 import Comment from "@/components/Comment";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function PostPage() {
   const router = useRouter();
@@ -69,15 +70,24 @@ export default function PostPage() {
             </div>
 
             {/* the comments on this post */}
-
-            {comments.length > 0 &&
-              comments.map((comment) => (
-                <Comment
-                  key={comment.id}
-                  id={comment.id}
-                  comment={comment.data()}
-                />
-              ))}
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {comments.length > 0 &&
+                  comments.map((comment) => (
+                    <Comment
+                      key={comment.id}
+                      commentId={comment.id}
+                      originalPostId={id}
+                      comment={comment.data()}
+                    />
+                  ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           <RightSidebar />

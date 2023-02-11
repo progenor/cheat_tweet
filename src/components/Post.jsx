@@ -20,31 +20,24 @@ import { useRouter } from "next/router";
 const Post = ({ id, post }) => {
   const { data: session } = useSession();
   const router = useRouter();
+
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
   const [hasLikes, setHasLikes] = useState(false);
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIDState);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "posts", id, "comments"),
-      (snapshot) => {
-        setComments(snapshot.docs);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [db]);
+    onSnapshot(collection(db, "posts", id, "comments"), (snapshot) => {
+      setComments(snapshot.docs);
+    });
+  }, [db, id]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "posts", id, "likes"),
-      (snapshot) => {
-        setLikes(snapshot.docs);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [db]);
+    onSnapshot(collection(db, "posts", id, "likes"), (snapshot) => {
+      setLikes(snapshot.docs);
+    });
+  }, [db, id]);
 
   useEffect(() => {
     setHasLikes(
@@ -77,9 +70,6 @@ const Post = ({ id, post }) => {
       }
     }
   };
-
-  const [open, setOpen] = useRecoilState(modalState);
-  const [postId, setPostId] = useRecoilState(postIDState);
 
   return (
     <div className="flex pt-2 border border-gray-200">
@@ -120,7 +110,12 @@ const Post = ({ id, post }) => {
               className="mr-2 text-2xl cursor-pointer"
             />
             {comments.length > 0 && (
-              <span className="text-sm">{comments.length}</span>
+              <span
+                className="text-sm cursor-pointer"
+                onClick={() => router.push(`/posts/${postId}`)}
+              >
+                {comments.length}
+              </span>
             )}
           </div>
           <div className="flex items-center">

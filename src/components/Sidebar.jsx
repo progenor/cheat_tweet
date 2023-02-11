@@ -8,14 +8,16 @@ import sty from "@/styles/SidebarMenu.module.scss";
 
 import { useSession, signOut, signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Sidebar = () => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <div className="fixed flex-col hidden h-full p-4 mx-auto sm:flex xl:items-start xl:ml-24">
       {/* logo */}
-      <div className={sty.logo_cont}>
+      <div className={sty.logo_cont} onClick={() => router.push("/")}>
         <Image
           src={logo}
           width={50}

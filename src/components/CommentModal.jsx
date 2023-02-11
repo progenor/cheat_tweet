@@ -5,11 +5,19 @@ import { GrFormClose } from "react-icons/gr";
 import { useEffect, useState, useRef } from "react";
 import Modal from "react-modal";
 import { db } from "../../firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { BsFillEmojiSunglassesFill } from "react-icons/bs";
 import { AiOutlineFileImage } from "react-icons/ai";
+
+import { useRouter } from "next/router";
 
 const CommentModal = () => {
   const [open, setOpen] = useRecoilState(modalState);
@@ -20,6 +28,8 @@ const CommentModal = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const filePickerRef = useRef(null);
+  const router = useRouter();
+
   useEffect(() => {
     onSnapshot(doc(db, "posts", postId), (snapshot) => {
       setPost(snapshot);
@@ -41,29 +51,20 @@ const CommentModal = () => {
     if (loading) return;
     else setLoading(true);
 
-    const docRef = await addDoc(collection(db, "posts"), {
-      id: session?.user?.uid,
+    await addDoc(collection(db, "posts", postId, "comments"), {
       name: session?.user?.name,
       username: session?.user?.username,
-      text: input,
       userImg: session?.user?.image,
+      text: input,
+      image: selectedFile,
       timestamp: serverTimestamp(),
     });
-
-    const fileRef = ref(storage, `posts/${docRef.id}/image`);
-
-    if (selectedFile) {
-      await uploadString(fileRef, selectedFile, "data_url").then(async () => {
-        const getFileURL = await getDownloadURL(fileRef);
-        await updateDoc(doc(db, "posts", docRef.id), {
-          image: getFileURL,
-        });
-      });
-    }
 
     setInput("");
     setSelectedFile(null);
     setLoading(false);
+    setOpen(false);
+    router.push(`/posts/${postId}`);
   };
 
   return (

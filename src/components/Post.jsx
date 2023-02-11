@@ -21,7 +21,19 @@ const Post = ({ post }) => {
   const { data: session } = useSession();
 
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [hasLikes, setHasLikes] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", post.id, "comments"),
+      (snapshot) => {
+        setComments(snapshot.docs);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [db]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -89,21 +101,25 @@ const Post = ({ post }) => {
           <BsThreeDots className="mr-2 text-2xl cursor-pointer" />
         </div>
         <p className="pl-2 mb-2">{post.data().text}</p>
-        <img src={post.data().image} alt="post image" />
-
+        {post.data().image && <img src={post.data().image} alt="post image" />}
         {/* buttons */}
         <div className="flex justify-between px-4 my-5">
-          <AiOutlineComment
-            onClick={() => {
-              if (!session) {
-                signIn();
-              } else {
-                setPostId(post.id);
-                setOpen(!open);
-              }
-            }}
-            className="mr-2 text-2xl cursor-pointer"
-          />
+          <div className="flex items-center">
+            <AiOutlineComment
+              onClick={() => {
+                if (!session) {
+                  signIn();
+                } else {
+                  setPostId(post.id);
+                  setOpen(!open);
+                }
+              }}
+              className="mr-2 text-2xl cursor-pointer"
+            />
+            {comments.length > 0 && (
+              <span className="text-sm">{comments.length}</span>
+            )}
+          </div>
           <div className="flex items-center">
             {!hasLikes ? (
               <AiOutlineHeart

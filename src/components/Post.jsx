@@ -10,23 +10,23 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db, storage } from "../../firebase";
-
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { deleteObject, ref } from "firebase/storage";
 import { modalState, postIDState } from "atom/modalAtom";
 import { useRecoilState } from "recoil";
+import { useRouter } from "next/router";
 
-const Post = ({ post }) => {
+const Post = ({ id, post }) => {
   const { data: session } = useSession();
-
+  const router = useRouter();
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
   const [hasLikes, setHasLikes] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "posts", post.id, "comments"),
+      collection(db, "posts", id, "comments"),
       (snapshot) => {
         setComments(snapshot.docs);
       }
@@ -37,7 +37,7 @@ const Post = ({ post }) => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "posts", post.id, "likes"),
+      collection(db, "posts", id, "likes"),
       (snapshot) => {
         setLikes(snapshot.docs);
       }
@@ -55,9 +55,9 @@ const Post = ({ post }) => {
   const likePost = async () => {
     if (session) {
       if (hasLikes) {
-        await deleteDoc(doc(db, "posts", post.id, "likes", session?.user.uid));
+        await deleteDoc(doc(db, "posts", id, "likes", session?.user.uid));
       } else {
-        await setDoc(doc(db, "posts", post.id, "likes", session?.user.uid), {
+        await setDoc(doc(db, "posts", id, "likes", session?.user.uid), {
           username: session.user.username,
         });
       }
@@ -68,11 +68,12 @@ const Post = ({ post }) => {
 
   const deletePost = async () => {
     if (window.confirm("Are you sure you want to delete this post?")) {
+      router.push("/");
       // delete post from firestore
-      await deleteDoc(doc(db, "posts", post.id));
+      await deleteDoc(doc(db, "posts", id));
       //delete post image from storage
-      if (post.data().image) {
-        await deleteObject(ref(storage, `posts/${post.id}/image`));
+      if (post.data()?.image) {
+        await deleteObject(ref(storage, `posts/${id}/image`));
       }
     }
   };
@@ -81,9 +82,9 @@ const Post = ({ post }) => {
   const [postId, setPostId] = useRecoilState(postIDState);
 
   return (
-    <div className="flex border border-gray-200">
+    <div className="flex pt-2 border border-gray-200">
       <img
-        src={post.data().userImg}
+        src={post?.data()?.userImg}
         className="h-[70px] rounded-full cursor-pointer"
         alt="user profile picture"
       />
@@ -91,17 +92,19 @@ const Post = ({ post }) => {
         <div className="flex items-center justify-between">
           <div className="flex cursor-pointer">
             <h3 className="mr-3 font-bold hover:underline">
-              {post.data().name}
+              {post?.data()?.name}
             </h3>
-            <h2 className="mr-2">@{post.data().username}</h2>
+            <h2 className="mr-2">@{post?.data()?.username}</h2>
             <h2 className="hidden md:inline">
-              <Moment fromNow>{post.data().timestamp?.toDate()}</Moment>
+              <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </h2>
           </div>
           <BsThreeDots className="mr-2 text-2xl cursor-pointer" />
         </div>
-        <p className="pl-2 mb-2">{post.data().text}</p>
-        {post.data().image && <img src={post.data().image} alt="post image" />}
+        <p className="pl-2 mb-2">{post?.data()?.text}</p>
+        {post?.data()?.image && (
+          <img src={post?.data()?.image} alt="post image" />
+        )}
         {/* buttons */}
         <div className="flex justify-between px-4 my-5">
           <div className="flex items-center">
@@ -110,7 +113,7 @@ const Post = ({ post }) => {
                 if (!session) {
                   signIn();
                 } else {
-                  setPostId(post.id);
+                  setPostId(id);
                   setOpen(!open);
                 }
               }}
@@ -138,7 +141,7 @@ const Post = ({ post }) => {
           </div>
 
           <BsBookmarksFill className="mr-2 text-2xl cursor-pointer" />
-          {session?.user.uid === post.data().id && (
+          {session?.user.uid === post?.data()?.id && (
             <BsTrash
               onClick={() => deletePost()}
               className="mr-2 text-2xl cursor-pointer"

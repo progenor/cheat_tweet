@@ -7,7 +7,7 @@ const RightSidebar = () => {
     <div className="hidden lg:inline xl:w-[600px] ml-8">
       {/* Search bar */}
       <div className="w-[90%] xl:w[75%] sticky top-0 py-1.5 z-50 rounded-full">
-        <div className="relative flex items-center p-3 bg-red-400 rounded-full">
+        <div className="relative flex items-center p-3 rounded-full">
           <AiOutlineSearch className="z-50 w-auto h-6 text-gray-500" />
           <input
             type="text"

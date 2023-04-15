@@ -94,9 +94,9 @@ const Post = ({ id, post }) => {
         <p className="pl-2 mb-2">{post?.data()?.text}</p>
         {post?.data()?.image && (
           <>
-          <img src={post?.data()?.image} alt="CLCIK ME"/>
+          
           <a target="_blank" href={post?.data()?.image} rel="noreferrer noopener" >
-            OPEN IN NEW WINDOW
+          <img src={post?.data()?.image} alt="CLCIK ME"/>  OPEN IN NEW WINDOW
           </a>
           </>
         )}

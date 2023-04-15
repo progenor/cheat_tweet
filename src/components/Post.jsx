@@ -117,7 +117,7 @@ const Post = ({ id, post }) => {
             {comments.length > 0 && (
               <span
                 className="text-sm cursor-pointer"
-                onClick={() => router.push(`/posts/${postId}`)}
+                onClick={() => router.push(`/posts/${id}`)}
               >
                 {comments.length}
               </span>

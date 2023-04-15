@@ -95,7 +95,7 @@ const Post = ({ id, post }) => {
         {post?.data()?.image && (
           <>
           <img src={post?.data()?.image} alt="CLCIK ME"/>
-          <a target="_blank" href={post?.data()?.image} >
+          <a target="_blank" href={post?.data()?.image} rel="noreferrer noopener" >
             OPEN IN NEW WINDOW
           </a>
           </>

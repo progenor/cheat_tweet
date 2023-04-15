@@ -93,7 +93,12 @@ const Post = ({ id, post }) => {
         </div>
         <p className="pl-2 mb-2">{post?.data()?.text}</p>
         {post?.data()?.image && (
-          <img src={post?.data()?.image} alt="post image" />
+          <>
+          <img src={post?.data()?.image} alt="CLCIK ME"/>
+          <a target="_blank" href={post?.data()?.image} >
+            OPEN IN NEW WINDOW
+          </a>
+          </>
         )}
         {/* buttons */}
         <div className="flex justify-between px-4 my-5">

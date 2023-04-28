@@ -94,10 +94,14 @@ const Post = ({ id, post }) => {
         <p className="pl-2 mb-2">{post?.data()?.text}</p>
         {post?.data()?.image && (
           <>
-          
-          <a target="_blank" href={post?.data()?.image} rel="noreferrer noopener" >
-          <img src={post?.data()?.image} alt="CLCIK ME"/>  OPEN IN NEW WINDOW
-          </a>
+            <a
+              target="_blank"
+              href={post?.data()?.image}
+              rel="noreferrer noopener"
+            >
+              <img src={post?.data()?.image} alt="CLCIK ME" /> OPEN IN NEW
+              WINDOW
+            </a>
           </>
         )}
         {/* buttons */}

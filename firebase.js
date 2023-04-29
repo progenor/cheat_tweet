@@ -11,12 +11,12 @@ import { getAuth } from "firebase/auth";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "cheat-tweet.firebaseapp.com",
-  projectId: "cheat-tweet",
-  storageBucket: "cheat-tweet.appspot.com",
-  messagingSenderId: "903590777886",
-  appId: "1:903590777886:web:788fc2771ac1e2b4240a0f",
-  measurementId: "G-VWPC20Y8KP",
+  authDomain: process.env.NEXT_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PROJECT_ID,
+  storageBucket: process.env.NEXT_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_APP_ID,
+  measurementId: process.env.NEXT_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
